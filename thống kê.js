@@ -1,0 +1,186 @@
+$(document).ready(function(){
+    taiDuLieu();
+
+    $("#btnThem").click(function(){
+        themDong();
+        luuDuLieu();
+    });
+
+    $(document).on("input", ".sogio, .giagio, .giamgia, .maban", function(){
+        tinhDong($(this).closest("tr"));
+        capNhatTong();
+        luuDuLieu();
+    });
+
+    $(document).on("click", ".btnXoa", function(){
+        $(this).closest("tr").remove();
+        capNhatTong();
+        luuDuLieu();
+    });
+
+    $("#ngayBatDau, #ngayKetThuc").on("change", function(){
+        luuDuLieu();
+    });
+
+    function themDong(maban = "", sogio = "", giagio = "", giamgia = "") {
+        $("#bangDoanhThu tbody").append(`
+            <tr>
+                <td data-label="Mã bàn"><input type="text" class="maban" value="${maban}"></td>
+                <td data-label="Số giờ"><input type="number" class="sogio" min="0" value="${sogio}"></td>
+                <td data-label="Giá/giờ"><input type="number" class="giagio" min="0" value="${giagio}"></td>
+                <td data-label="Giảm giá (%)"><input type="number" class="giamgia" min="0" max="100" value="${giamgia}"></td>
+                <td data-label="Tổng giảm" class="tonggiam">0</td>
+                <td data-label="Thực thu" class="thucthu">0</td>
+                <td data-label="Xóa"><button class="btnXoa">X</button></td>
+            </tr>
+        `);
+    }
+
+    function tinhDong(row){
+        let sogio = parseFloat(row.find(".sogio").val()) || 0;
+        let giagio = parseFloat(row.find(".giagio").val()) || 0;
+        let giamgia = parseFloat(row.find(".giamgia").val()) || 0;
+
+        let tong = sogio * giagio;
+        let giam = tong * giamgia / 100;
+        let thucthu = tong - giam;
+
+        row.find(".tonggiam").text(giam.toLocaleString());
+        row.find(".thucthu").text(thucthu.toLocaleString());
+    }
+
+    function capNhatTong(){
+        let tong = 0;
+        $("#bangDoanhThu tbody tr").each(function(){
+            let thucthu = $(this).find(".thucthu").text().replace(/,/g, "");
+            tong += parseFloat(thucthu) || 0;
+        });
+        $("#tongDoanhThu").text(tong.toLocaleString());
+    }
+
+    function luuDuLieu(){
+        let data = [];
+        $("#bangDoanhThu tbody tr").each(function(){
+            data.push({
+                maban: $(this).find(".maban").val(),
+                sogio: $(this).find(".sogio").val(),
+                giagio: $(this).find(".giagio").val(),
+                giamgia: $(this).find(".giamgia").val()
+            });
+        });
+
+        let info = {
+            ngayBatDau: $("#ngayBatDau").val(),
+            ngayKetThuc: $("#ngayKetThuc").val(),
+            duLieuBang: data
+        };
+
+        localStorage.setItem("doanhThuTuan", JSON.stringify(info));
+    }
+
+    function taiDuLieu(){
+        let info = localStorage.getItem("doanhThuTuan");
+        if(info){
+            info = JSON.parse(info);
+            $("#ngayBatDau").val(info.ngayBatDau);
+            $("#ngayKetThuc").val(info.ngayKetThuc);
+            info.duLieuBang.forEach(row => themDong(row.maban, row.sogio, row.giagio, row.giamgia));
+            $("#bangDoanhThu tbody tr").each(function(){
+                tinhDong($(this));
+            });
+            capNhatTong();
+        }
+    }
+
+    $("#btnExcel").click(function(){
+        if ($("#bangDoanhThu tbody tr").length === 0) {
+            alert("Chưa có dữ liệu để xuất!");
+            return;
+        }
+
+        let wb = XLSX.utils.book_new();
+        let ws_data = [
+            ["BÁO CÁO DOANH THU THEO TUẦN"],
+            ["Từ ngày:", $("#ngayBatDau").val(), "Đến ngày:", $("#ngayKetThuc").val()],
+            [],
+            ["Mã bàn","Số giờ","Giá/giờ (VNĐ)","Giảm giá (%)","Tổng giảm (VNĐ)","Thực thu (VNĐ)"]
+        ];
+
+        let tong = 0;
+        $("#bangDoanhThu tbody tr").each(function(){
+            let thucthu = parseFloat($(this).find(".thucthu").text().replace(/,/g, "")) || 0;
+            tong += thucthu;
+
+            let row = [
+                $(this).find(".maban").val(),
+                $(this).find(".sogio").val(),
+                parseFloat($(this).find(".giagio").val()) || 0,
+                parseFloat($(this).find(".giamgia").val()) || 0,
+                parseFloat($(this).find(".tonggiam").text().replace(/,/g, "")) || 0,
+                thucthu
+            ];
+            ws_data.push(row);
+        });
+
+        ws_data.push([]);
+        ws_data.push(["", "", "", "", "TỔNG DOANH THU", tong]);
+
+        let ws = XLSX.utils.aoa_to_sheet(ws_data);
+        ws['!cols'] = [
+            { wch: 12 }, { wch: 10 }, { wch: 15 },
+            { wch: 12 }, { wch: 18 }, { wch: 18 }
+        ];
+
+        const range = XLSX.utils.decode_range(ws["!ref"]);
+        for (let R = 3; R <= range.e.r; ++R) {
+            for (let C = 0; C <= 5; ++C) {
+                const cell = XLSX.utils.encode_cell({ r: R, c: C });
+                if (!ws[cell]) continue;
+                ws[cell].s = {
+                    alignment: { horizontal: "center", vertical: "center" },
+                    border: {
+                        top: { style: "thin" },
+                        bottom: { style: "thin" },
+                        left: { style: "thin" },
+                        right: { style: "thin" }
+                    }
+                };
+            }
+        }
+
+        ["A4","B4","C4","D4","E4","F4"].forEach(cell => {
+            if (ws[cell]) {
+                ws[cell].s = {
+                    font: { bold: true, color: { rgb: "FFFFFF" } },
+                    fill: { fgColor: { rgb: "0070C0" } },
+                    alignment: { horizontal: "center", vertical: "center" },
+                    border: {
+                        top: { style: "thin" },
+                        bottom: { style: "thin" },
+                        left: { style: "thin" },
+                        right: { style: "thin" }
+                    }
+                };
+            }
+        });
+
+        ws["A1"].s = {
+            font: { bold: true, sz: 14, color: { rgb: "1A237E" } },
+            alignment: { horizontal: "center" }
+        };
+
+        ws['!merges'] = [{ s: { r:0, c:0 }, e: { r:0, c:5 } }];
+
+        for (let R = 4; R <= range.e.r; ++R) {
+            ["C","E","F"].forEach(col => {
+                const cell = ws[col + (R+1)];
+                if (cell && typeof cell.v === "number") {
+                    cell.z = '#,##0 [$₫-vi-VN]';
+                }
+            });
+        }
+
+        XLSX.utils.book_append_sheet(wb, ws, "DoanhThuTuan");
+        XLSX.writeFile(wb, "DoanhThuTuan.xlsx");
+    });
+});
