@@ -1,0 +1,114 @@
+
+.header {
+    width: 100%;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px 50px; 
+    background-color: #2a2566;
+    border-radius: 10px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+.logo b {
+    color: rgb(255, 255, 255);
+}
+
+.menu-toggle {
+    display: none; 
+    cursor: pointer;
+}
+
+#mainNav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#mainNav li {
+    margin-left: 40px;
+}
+
+nav a {
+    text-decoration: none; 
+    color: #ffffff;
+    font-weight: 800;
+}
+.accout a{
+    text-decoration: none; 
+    color: #ffffff;
+    font-weight: 900;
+}
+
+#mainNav li:hover a { 
+    color: rgb(195, 160, 160);
+    transition: 0.3s;
+}
+
+
+@media (max-width: 768px) {
+   
+    .header {
+        padding: 15px 20px; 
+    }
+
+   
+    .menu-toggle {
+        display: block; 
+        z-index: 1001; 
+    }
+
+   
+    .menu-toggle .bar {
+        width: 25px;
+        height: 3px;
+        background-color: rgb(9, 3, 3);
+        margin: 5px 0;
+        transition: 0.4s;
+    }
+
+    #mainNav {
+        position: absolute;
+        top: 60px; 
+        left: 0;
+        width: 100%;
+        background-color: #444; 
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        
+  
+        height: 0; 
+        overflow: hidden; 
+        transition: height 0.3s ease-in-out; 
+    }
+    
+
+    #mainNav ul {
+        flex-direction: column; 
+        padding: 10px 0;
+    }
+    #mainNav li {
+        margin: 0;
+        text-align: center;
+    }
+    #mainNav a {
+        padding: 15px 20px;
+        display: block;
+        color: white;
+    }
+
+ 
+    #mainNav.active {
+        height: 300px !important; 
+        display: block !important; 
+        overflow: visible !important; 
+    }
+    
+    .account {
+        display: none;
+    }
+}
+
+
