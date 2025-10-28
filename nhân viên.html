@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phân ca nhân viên</title>
+  <style>
+    .container { display: flex; width: 100%; }
+    .left { flex: 0 0 40%; background: pink; padding: 10px; }
+    .right { flex: 0 0 60%; background: pink; padding: 10px; }
+    .lich { flex: 1; background-color: white; color:black; border-radius: 4px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: center; border: 2px solid #000; }
+    th, td { border: 1.5px solid #000; padding: 10px; font-size: 18px; }
+    .title { text-align: center; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="left">
+    <h2>NHÂN VIÊN VÀ CA LÀM</h2>
+    <input type="text" id="search" placeholder="🔍 search"><br>
+
+    <div>
+      <h3 onclick="hienThi('ql')">Quản Lý ▼</h3>
+      <ul id="ql" style="display:none;"></ul>
+    </div>
+
+    <div>
+      <h3 onclick="hienThi('pv')">Phục Vụ ▼</h3>
+      <ul id="pv" style="display:none;"></ul>
+    </div>
+
+    <div>
+      <h3 onclick="hienThi('tn')">Thu Ngân ▼</h3>
+      <ul id="tn" style="display:none;"></ul>
+    </div>
+
+    <button onclick="themNhanVien()">+ Thêm nhân viên</button>
+    <button id="xoaNV" onclick="xoaNhanVien()">- Xóa nhân viên</button>
+  </div>
+
+  <div class="right">
+    <h2 class="title" id="tenNV">Chưa chọn nhân viên</h2>
+    <div class="lich">
+      <table>
+        <tr><th colspan="8" id="ngay"></th></tr>
+        <tr>
+          <th>Ca Làm</th>
+          <th>Thứ 2</th><th>Thứ 3</th><th>Thứ 4</th>
+          <th>Thứ 5</th><th>Thứ 6</th><th>Thứ 7</th><th>CN</th>
+        </tr>
+
+        <tr id="rowSang">
+          <td>Sáng</td>
+          <td id="sang2"></td><td id="sang3"></td><td id="sang4"></td>
+          <td id="sang5"></td><td id="sang6"></td><td id="sang7"></td><td id="sangCN"></td>
+        </tr>
+
+        <tr id="rowChieu">
+          <td>Chiều</td>
+          <td id="chieu2"></td><td id="chieu3"></td><td id="chieu4"></td>
+          <td id="chieu5"></td><td id="chieu6"></td><td id="chieu7"></td><td id="chieuCN"></td>
+        </tr>
+
+        <tr id="rowToi">
+          <td>Tối</td>
+          <td id="toi2"></td><td id="toi3"></td><td id="toi4"></td>
+          <td id="toi5"></td><td id="toi6"></td><td id="toi7"></td><td id="toiCN"></td>
+        </tr>
+      </table>
+    </div>
+
+    <br>
+    <button onclick="capNhat()">Cập nhật</button>
+    <button onclick="resetLuaChon()">Chọn lại</button>
+  </div>
+</div>
+
+<script>
+  let dsNV = JSON.parse(localStorage.getItem("dsNV")) || { ql: [], pv: [], tn: [] };
+  let lichNV = JSON.parse(localStorage.getItem("lichNV")) || {};
+let Xoa = false;        // Lưu lịch của từng nhân viên
+let nhanVienHienTai = ""; // Ai đang được chọn
+
+function hienThi(id) {
+  var list = document.getElementById(id);
+  list.style.display = (list.style.display === "none" || list.style.display === "") ? "block" : "none";
+}
+
+function themNhanVien() {
+  var nhom = prompt("Thêm vào nhóm nào? (ql/pv/tn): ");
+  var ten = prompt("Nhập tên nhân viên:");
+  if (!ten) return;
+
+  var list = document.getElementById(nhom);
+  if (!list) { alert("Nhóm không hợp lệ"); return; }
+
+  var li = document.createElement("li");
+  li.textContent = ten;
+
+  li.onclick = function() {
+    if (Xoa) {
+      if (confirm("Xóa nhân viên '" + ten + "'?")) this.remove();
+    } else {
+      chonNhanVien(ten);
+    }
+  };
+  list.appendChild(li);
+  alert("✅ Thêm nhân viên thành công.");
+
+
+  lichNV[ten] = {};
+  ids.forEach(id => lichNV[ten][id] = "Không");
+}
+
+function xoaNhanVien() {
+  Xoa = !Xoa;
+  var btn = document.getElementById("xoaNV");
+  btn.textContent = Xoa ? "Chọn tên để xóa" : "- Xóa nhân viên";
+}
+
+const ids = [
+  'sang2','sang3','sang4','sang5','sang6','sang7','sangCN',
+  'chieu2','chieu3','chieu4','chieu5','chieu6','chieu7','chieuCN',
+  'toi2','toi3','toi4','toi5','toi6','toi7','toiCN'
+];
+
+function taoRadio(id, giaTri = "Không") {
+  var td = document.getElementById(id);
+  td.innerHTML = `
+    <label><input type="radio" name="${id}" value="Có" ${giaTri==="Có"?"checked":""}> Có</label>
+    <label><input type="radio" name="${id}" value="Không" ${giaTri==="Không"?"checked":""}> Không</label>
+  `;
+}
+
+function chonNhanVien(ten) {
+  nhanVienHienTai = ten;
+  document.getElementById("ngay").innerText = "Lịch làm của: " + ten;
+
+  if (!lichNV[ten]) {
+    lichNV[ten] = {};
+    ids.forEach(id => lichNV[ten][id] = "Không");
+  }
+  ids.forEach(id => {
+    const val = lichNV[ten][id];
+    const td = document.getElementById(id);
+    td.textContent = (val === "Có") ? "✔" : "";
+  });
+  localStorage.setItem("lichNV", JSON.stringify(lichNV));
+}
+
+function capNhat() {
+  if (!nhanVienHienTai) {
+    alert("Hãy chọn nhân viên trước!");
+    return;
+  }
+
+  ids.forEach(id => {
+    var cell = document.getElementById(id);
+    var radios = cell.getElementsByTagName('input');
+    var giaTri = lichNV[nhanVienHienTai][id] || "Không";
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) giaTri = radios[i].value;
+    }
+
+    lichNV[nhanVienHienTai][id] = giaTri;
+    cell.textContent = (giaTri === "Có") ? "✔" : "";
+  });
+
+  alert("Đã lưu lịch cho " + nhanVienHienTai);
+}
+
+function resetLuaChon() {
+  if (!nhanVienHienTai) {
+    alert("⚠Hãy chọn nhân viên trước!");
+    return;
+  }
+  ids.forEach(id => taoRadio(id, lichNV[nhanVienHienTai][id]));
+}
+
+ids.forEach(id => taoRadio(id));
+
+var today = new Date();
+document.getElementById("ngay").innerText = "Tháng: " + (today.getMonth() + 1) + "/" + today.getFullYear();
+</script>
+</body>
+</html>
