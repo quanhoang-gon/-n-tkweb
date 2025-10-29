@@ -3,14 +3,12 @@ body {
     margin: 40px;
   }
   
-  /* --- Tiêu đề --- */
   h2 {
     margin-top: 40px;
     border-bottom: 2px solid #ccc;
     padding-bottom: 5px;
   }
   
-  /* --- Ô thời gian mở / đóng cửa --- */
   .time-box {
     display: inline-block;
     padding: 10px 20px;
@@ -18,16 +16,17 @@ body {
     margin: 10px;
     font-weight: bold;
   }
+  
   .open-time {
     background: #d6f5d6;
     border: 1px solid #8ad48a;
   }
+  
   .close-time {
     background: #f7caca;
     border: 1px solid #d88c8c;
   }
   
-  /* --- Khu vực chứa các bàn --- */
   .table-container {
     display: flex;
     flex-wrap: wrap;
@@ -35,52 +34,58 @@ body {
     margin-top: 20px;
   }
   
-  /* --- Hộp bàn --- */
+  /* Ô bàn */
   .table-box {
     width: 150px;
     border: 1px solid #8edb8e;
     border-radius: 8px;
-    text-align: center;
-    background: #e7ffe7; /* Bàn trống */
-    position: relative;
+    background: #e7ffe7; /* màu bàn trống */
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.3s;
   }
   
-  /* --- Khi bàn đang chơi --- */
+  /* Khi đang chơi */
   .table-box.dangchoi {
     background: #fcf5a6;
     border-color: #c2ba5d;
   }
   
-  /* --- Header của mỗi bàn (chứa tên bàn + nút xóa) --- */
+  /* Thanh tiêu đề của bàn */
   .table-header {
-    background: #d9f0d9;
-    padding: 4px 8px;
-    font-weight: bold;
-    border-bottom: 1px solid #b5d8b5;
+    width: 100%;
+    background: #d8eed8;
+    border-bottom: 1px solid #8edb8e;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 5px 8px;
+    box-sizing: border-box;
+    font-weight: bold;
   }
   
-  /* --- Nút xóa góc phải --- */
+  /* Nút xóa góc phải */
   .btn-xoa {
+    background: none;
     border: none;
-    background: transparent;
-    color: #333;
     font-size: 16px;
-    font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
+    color: #555;
   }
   .btn-xoa:hover {
     color: red;
   }
   
-  /* --- Nút mở bàn / tính tiền --- */
+  /* Tiêu đề "Bàn 1" */
+  .table-header span {
+    font-weight: bold;
+  }
+  
+  /* Nút bấm */
   .btn {
-    display: block;
-    width: 100%;
+    width: 90%;
     border: none;
     padding: 10px;
     margin: 8px 0;
@@ -88,15 +93,18 @@ body {
     color: white;
     border-radius: 6px;
     cursor: pointer;
+    font-size: 15px;
   }
+  
   .btn-mo {
     background: #44c944;
   }
+  
   .btn-tinh {
     background: #e44c4c;
   }
   
-  /* --- Đồng hồ thời gian --- */
+  /* Bộ đếm thời gian */
   .timer {
     margin-top: 8px;
     padding: 5px;
@@ -105,10 +113,10 @@ body {
     font-weight: bold;
     background: white;
     width: 80%;
-    display: inline-block;
+    text-align: center;
   }
   
-  /* --- Nút thêm bàn (+) --- */
+  /* Ô dấu + */
   .add-box {
     width: 150px;
     height: 150px;
@@ -120,10 +128,8 @@ body {
     font-size: 48px;
     color: #bbb;
     cursor: pointer;
-    transition: 0.2s;
   }
   .add-box:hover {
-    color: #777;
-    border-color: #999;
+    background: #f0f0f0;
   }
   
