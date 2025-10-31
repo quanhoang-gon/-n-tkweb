@@ -8,6 +8,13 @@ body {
 
 h1 {
   color: #333;
+  margin-bottom: 30px;
+}
+
+h2 {
+  color: #444;
+  margin-top: 40px;
+  font-weight: 600;
 }
 
 .menu-container {
@@ -64,7 +71,7 @@ h1 {
 }
 
 .add-btn {
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 10px 20px;
   background: #2ecc71;
   border: none;
@@ -104,7 +111,8 @@ h1 {
   margin-right: auto;
 }
 
-#addForm input {
+#addForm input, 
+#addForm select {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -125,7 +133,6 @@ h1 {
   background: #2980b9;
 }
 
-/* Popup */
 .popup {
   display: none;
   position: fixed;
@@ -175,4 +182,31 @@ h1 {
 
 .popup-buttons button:last-child {
   background: #e74c3c;
+}
+
+.divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px 0;
+}
+
+.divider span {
+  color: #666;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 15px;
+  background: #f3f3f3;
+  padding: 0 10px;
+  position: relative;
+}
+
+.divider span::before,
+.divider span::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: #bbb;
+  margin: 0 10px;
+  border-radius: 2px;
 }
