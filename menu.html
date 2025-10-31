@@ -8,25 +8,17 @@
 </head>
 <body>
 
-  <h1> Menu Món</h1>
+  <h1>Menu Quán Bida</h1>
 
-  <div class="menu-container" id="menuContainer">
-    <div class="menu-item">
-      <button class="delete-btn" onclick="deleteItem(this)">×</button>
-      <img src="" alt="Khô bò">
-      <h3>Khô bò</h3>
-      <p>Giá: 30.000đ</p>
-      <button class="order-btn" onclick="openOrderPopup('Khô bò')">Order</button>
-    </div>
+  <h2>Thức ăn</h2>
+  <div class="menu-container" id="foodContainer"></div>
 
-    <div class="menu-item">
-      <button class="delete-btn" onclick="deleteItem(this)">×</button>
-      <img src="" alt="Cơm chiên">
-      <h3>Cơm chiên</h3>
-      <p>Giá: 35.000đ</p>
-      <button class="order-btn" onclick="openOrderPopup('Cơm chiên')">Order</button>
-    </div>
+  <div class="divider">
+    <span>_____________________________________________________</span>
   </div>
+
+  <h2>Nước uống</h2>
+  <div class="menu-container" id="drinkContainer"></div>
 
   <button class="add-btn" onclick="toggleForm()">+ Thêm món</button>
 
@@ -34,6 +26,10 @@
     <input type="text" id="foodName" placeholder="Tên món">
     <input type="text" id="foodPrice" placeholder="Giá">
     <input type="text" id="foodImg" placeholder="Link ảnh">
+    <select id="foodType">
+      <option value="food">Thức ăn</option>
+      <option value="drink">Nước uống</option>
+    </select>
     <button id="addButton">Thêm</button>
   </div>
 
