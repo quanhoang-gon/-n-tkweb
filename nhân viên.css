@@ -39,20 +39,20 @@
     font-size: 16px;
   }
 
-  h3 {
+  .left h3 {
     background: rgba(255,255,255,0.3);
     padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
   }
 
-  ul {
+  .left ul {
     list-style: none;
     padding-left: 15px;
     margin-top: 5px;
   }
 
-  li {
+  .left li {
     background: #fff;
     color: #444;
     padding: 6px 10px;
@@ -62,7 +62,7 @@
     transition: 0.2s;
   }
 
-  li:hover {
+  .left li:hover {
     background: #ffe4ec;
     transform: scale(1.03);
   }
@@ -113,26 +113,34 @@
     overflow-x: auto;
   }
 
-  table {
+  .right table {
     width: 100%;
     border-collapse: collapse;
     text-align: center;
   }
 
-  th {
+  .right th {
     background:#ffb6c1;
     color: white;
     padding: 10px;
   }
 
-  td {
+  .right td {
+    color: black;
     border: 1px solid #ddd;
     padding: 10px;
   }
+  td.checked {
+  color: black; 
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+}
 
-  tr:nth-child(even) { background: #fff5f8; }
-  td:first-child { font-weight: bold; color: #ff4f75; }
 
+   
+   td:first-child { font-weight: bold; color: #ff4f75; }
+ 
   .right button {
     width: 48%;
     margin-top: 15px;
