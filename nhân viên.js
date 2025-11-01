@@ -78,7 +78,14 @@ function capNhat() {
     let giaTri = lichNV[nhanVienHienTai][id] || "Không";
     for (let i = 0; i < radios.length; i++) if (radios[i].checked) giaTri = radios[i].value;
     lichNV[nhanVienHienTai][id] = giaTri;
-    cell.textContent = (giaTri === "Có") ? "✔" : "";
+    if (giaTri === "Có") {
+  cell.innerHTML = "✔";
+  cell.classList.add("checked");
+} else {
+  cell.innerHTML = "";
+  cell.classList.remove("checked");
+}
+
   });
   localStorage.setItem("lichNV", JSON.stringify(lichNV));
   alert("💾 Đã lưu lịch cho " + nhanVienHienTai);
