@@ -167,13 +167,31 @@ function initTable(table) {
 
         const finalTotal = billTimeAmount + serviceTotal;
         setText('billTotal', `${finalTotal.toLocaleString('vi-VN')} VNĐ`);
-
+// lưu số giờ chơi
+        savePlayTimeToLocalStorage(totalHours);
+//lưu doanh thu
+        saveRevenueToLocalStorage(finalTotal);
         // Xóa order
         if (storedOrders[tableKey]) {
             delete storedOrders[tableKey];
             localStorage.setItem('billiardOrders', JSON.stringify(storedOrders));
         }
     });
+    // === HÀM LƯU TỔNG GIỜ CHƠI (MỚI) ===
+function savePlayTimeToLocalStorage(hours) {
+    const today = new Date().toLocaleDateString('vi-VN');
+    
+    let timeData = JSON.parse(localStorage.getItem('dailyPlayTime')) || {};
+    
+    if (!timeData[today]) {
+        timeData[today] = 0;
+    }
+    
+    // Cộng dồn giờ chơi (hours là số thập phân, vd: 1.5 giờ)
+    timeData[today] += hours;
+    
+    localStorage.setItem('dailyPlayTime', JSON.stringify(timeData));
+}
 
     // 👉 NÚT XÓA
     btnDelete.addEventListener('click', () => {
@@ -347,3 +365,21 @@ if (addBookingItem) { addBookingItem.addEventListener('click', () => { if (modal
 if (closeBtn) { closeBtn.addEventListener('click', () => { if (modal) modal.classList.add('hidden'); }); }
 if (modal) { window.addEventListener('click', (event) => { if (event.target == modal) modal.classList.add('hidden'); }); }
 renderBookings();
+// === HÀM LƯU DOANH THU (MỚI THÊM) ===
+function saveRevenueToLocalStorage(amount) {
+    const today = new Date().toLocaleDateString('vi-VN'); // Lấy ngày hiện tại: vd "08/12/2025"
+    
+    // Lấy dữ liệu cũ từ bộ nhớ
+    let revenueData = JSON.parse(localStorage.getItem('dailyRevenue')) || {};
+    
+    // Nếu chưa có dữ liệu ngày hôm nay thì tạo mới bằng 0
+    if (!revenueData[today]) {
+        revenueData[today] = 0;
+    }
+    
+    // Cộng dồn tiền vào ngày hôm nay
+    revenueData[today] += amount;
+    
+    // Lưu lại vào bộ nhớ
+    localStorage.setItem('dailyRevenue', JSON.stringify(revenueData));
+}
