@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 
 :root {
-  --accent: #ff00cc; /* màu bạn yêu cầu */
+  --accent: #ff00cc; 
   --bg: #0f1115;
   --card: #121318;
   --muted: #bfc3cf;
@@ -32,18 +32,6 @@ body {
 a {
   color: var(--accent);
   text-decoration: none;
-}
-
-
-.account a {
-  margin-left: 14px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: var(--accent);
-  font-weight: 600;
-}
-.account a:hover {
-  background: var(--glass);
 }
 
 /* Layout */
